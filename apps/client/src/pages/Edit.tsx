@@ -1,6 +1,6 @@
 import { Button, Flex, Form, Input, Spin, Typography, Image } from "antd";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { MenuType } from "../interfaces";
 
 function Edit() {
@@ -115,9 +115,16 @@ function Edit() {
             <Image width={200} src={data.imageUrl} />
           </Form.Item>
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Guardar
-            </Button>
+            <Flex gap={12}>
+              <Button type="primary" htmlType="submit">
+                Guardar
+              </Button>
+              <Link to="/">
+                <Button type="default" htmlType="button">
+                  Cancelar
+                </Button>
+              </Link>
+            </Flex>
           </Form.Item>
         </Form>
       </Flex>
