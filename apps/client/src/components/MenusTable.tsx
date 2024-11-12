@@ -28,6 +28,7 @@ const columns: TableColumnsType<MenuType> = [
   {
     title: "Price",
     dataIndex: "price",
+    render: (price: number) => `$${price.toLocaleString("es-AR")}`,
   },
   {
     title: "Acciones",
