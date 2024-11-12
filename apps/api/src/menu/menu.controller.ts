@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { MenuService } from './menu.service';
 import { CreateMenuDTO, updateMenuDTO } from './dto/menu.dto';
@@ -17,6 +18,11 @@ export class MenuController {
   @Get()
   findAll() {
     return this.menuService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: number) {
+    return this.menuService.findOne(id);
   }
 
   @Post()

@@ -14,6 +14,10 @@ export class MenuService {
     return this.menuRepository.find();
   }
 
+  findOne(id: number): Promise<Menu> {
+    return this.menuRepository.findOne({ where: { id } });
+  }
+
   create(name: string, price: number, description: string, imageUrl: string) {
     const menu = {
       name,

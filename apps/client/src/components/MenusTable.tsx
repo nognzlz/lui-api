@@ -1,23 +1,21 @@
 import styled from "styled-components";
-import { Flex, Image, Table, TableColumnsType, TableProps } from "antd";
+import { Button, Flex, Image, Table, TableColumnsType, TableProps } from "antd";
+import { Link } from "react-router-dom";
+import { MenuType } from "../interfaces";
 
 const StyledImage = styled(Image)`
   object-fit: cover;
 `;
 
-interface DataType {
-  id: number;
-  imageUrl: string;
-  description: string;
-  name: string;
-  price: number;
-}
-
 interface MenusTableProps {
-  data: DataType[];
+  data: MenuType[];
 }
 
-const columns: TableColumnsType<DataType> = [
+const handleEdit = (id: number) => {
+  console.log("Edit", id);
+};
+
+const columns: TableColumnsType<MenuType> = [
   {
     title: "Image",
     dataIndex: "imageUrl",
@@ -31,10 +29,21 @@ const columns: TableColumnsType<DataType> = [
     title: "Price",
     dataIndex: "price",
   },
+  {
+    title: "Acciones",
+    dataIndex: "id",
+    render: (id: number) => (
+      <Link to={`/edit/${id}`}>
+        <Button type="primary" onClick={() => handleEdit(id)}>
+          Editar
+        </Button>
+      </Link>
+    ),
+  },
 ];
 
-const rowSelection: TableProps<DataType>["rowSelection"] = {
-  onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
+const rowSelection: TableProps<MenuType>["rowSelection"] = {
+  onChange: (selectedRowKeys: React.Key[], selectedRows: MenuType[]) => {
     console.log(
       `selectedRowKeys: ${selectedRowKeys}`,
       "selectedRows: ",
@@ -45,7 +54,7 @@ const rowSelection: TableProps<DataType>["rowSelection"] = {
 
 export const MenusTable = ({ data }: MenusTableProps) => {
   return (
-    <Table<DataType>
+    <Table<MenuType>
       rowKey={"id"}
       rowSelection={{ type: "radio", ...rowSelection }}
       dataSource={data}
