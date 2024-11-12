@@ -9,6 +9,7 @@ const StyledImage = styled(Image)`
 
 interface MenusTableProps {
   data: MenuType[];
+  onMenuSelected: (menu: MenuType) => void;
 }
 
 const handleEdit = (id: number) => {
@@ -43,19 +44,19 @@ const columns: TableColumnsType<MenuType> = [
   },
 ];
 
-const rowSelection: TableProps<MenuType>["rowSelection"] = {
-  onChange: (selectedRowKeys: React.Key[], selectedRows: MenuType[]) => {
-    console.log(
-      `selectedRowKeys: ${selectedRowKeys}`,
-      "selectedRows: ",
-      selectedRows
-    );
-  },
-};
+const StyledTable = styled(Table<MenuType>)`
+  width: 100%;
+`;
 
-export const MenusTable = ({ data }: MenusTableProps) => {
+export const MenusTable = ({ data, onMenuSelected }: MenusTableProps) => {
+  const rowSelection: TableProps<MenuType>["rowSelection"] = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: MenuType[]) => {
+      onMenuSelected(selectedRows[0]);
+    },
+  };
+
   return (
-    <Table<MenuType>
+    <StyledTable
       rowKey={"id"}
       rowSelection={{ type: "radio", ...rowSelection }}
       dataSource={data}
