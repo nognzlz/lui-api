@@ -4,5 +4,5 @@ export interface MenuType {
     description: string;
     name: string;
     price: number;
-    daysMenu: boolean;
+    isDaysMenu: boolean;
 }

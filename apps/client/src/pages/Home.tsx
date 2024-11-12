@@ -5,7 +5,7 @@ import { Card } from "../components/Card";
 import { MenuType } from "../interfaces";
 
 function Home() {
-  const [menus, setMenus] = useState([]);
+  const [menus, setMenus] = useState<MenuType[]>([]);
   const [menu, setMenu] = useState<MenuType | undefined>();
 
   const initData = async () => {
@@ -15,13 +15,6 @@ function Home() {
   useEffect(() => {
     initData();
   }, []);
-
-  // useEffect(() => {
-  //   notification.info({
-  //     message: "Notification Title",
-  //     description: "This is the content of the notification.",
-  //   });
-  // }, [menu]);
 
   const handleChooseMenu = async () => {
     if (menu) {
