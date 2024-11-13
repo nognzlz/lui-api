@@ -20,6 +20,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "@ant-design/icons": "^5.5.1",
     "@nestjs/typeorm": "^10.0.2",
     "sqlite3": "^5.1.7",
     "typeorm": "^0.3.20"

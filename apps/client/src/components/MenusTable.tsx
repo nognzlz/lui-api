@@ -1,5 +1,14 @@
 import styled from "styled-components";
-import { Button, Flex, Image, Table, TableColumnsType, TableProps } from "antd";
+import {
+  Button,
+  Flex,
+  Image,
+  Table,
+  TableColumnsType,
+  TableProps,
+  Tooltip,
+} from "antd";
+import { CheckOutlined, CloseOutlined, EditOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { MenuType } from "../interfaces";
 
@@ -12,33 +21,44 @@ interface MenusTableProps {
   onMenuSelected: (menu: MenuType) => void;
 }
 
-const handleEdit = (id: number) => {
-  console.log("Edit", id);
-};
-
 const columns: TableColumnsType<MenuType> = [
   {
-    title: "Image",
+    title: "Imagen",
     dataIndex: "imageUrl",
     render: (imageUrl: string) => <StyledImage width={100} src={imageUrl} />,
   },
   {
-    title: "Name",
+    title: "Nombre",
     dataIndex: "name",
   },
   {
-    title: "Price",
+    title: "Precio",
     dataIndex: "price",
     render: (price: number) => `$${price.toLocaleString("es-AR")}`,
   },
   {
+    align: "center",
+    title: "Activo",
+    dataIndex: "isDaysMenu",
+    render: (isDaysMenu: boolean) => (
+      <p>
+        {isDaysMenu ? (
+          <CheckOutlined style={{ color: "#6EC531", fontSize: "20px" }} />
+        ) : (
+          <CloseOutlined style={{ color: "#ED1C24", fontSize: "20px" }} />
+        )}
+      </p>
+    ),
+  },
+  {
+    align: "center",
     title: "Acciones",
     dataIndex: "id",
     render: (id: number) => (
       <Link to={`/edit/${id}`}>
-        <Button type="primary" onClick={() => handleEdit(id)}>
-          Editar
-        </Button>
+        <Tooltip placement="top" title="Editar">
+          <Button type="primary" icon={<EditOutlined />} />
+        </Tooltip>
       </Link>
     ),
   },
@@ -54,6 +74,8 @@ export const MenusTable = ({ data, onMenuSelected }: MenusTableProps) => {
       onMenuSelected(selectedRows[0]);
     },
   };
+
+  console.log(data);
 
   return (
     <StyledTable

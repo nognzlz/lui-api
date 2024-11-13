@@ -2,7 +2,8 @@ import { useMemo, createContext } from "react";
 import "./App.css";
 import Home from "./pages/Home";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Edit from "./pages/Edit";
+import EditMenu from "./pages/EditMenu";
+import AddMenu from "./pages/AddMenu";
 import { Header } from "./components/Header";
 import Title from "antd/es/typography/Title";
 import { Flex, Layout, notification } from "antd";
@@ -50,7 +51,8 @@ function App() {
           <StyledContent>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/edit/:id" element={<Edit />} />
+              <Route path="/add" element={<AddMenu />} />
+              <Route path="/edit/:id" element={<EditMenu />} />
             </Routes>
           </StyledContent>
         </Layout>
