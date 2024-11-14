@@ -26,8 +26,8 @@ export class MenuController {
   }
 
   @Post()
-  create(@Body() product: CreateMenuDTO) {
-    const { name, price, description, imageUrl } = product;
+  create(@Body() menu: CreateMenuDTO) {
+    const { name, price, description, imageUrl } = menu;
 
     return this.menuService.create(name, price, description, imageUrl);
   }
