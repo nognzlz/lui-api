@@ -21,5 +21,6 @@ import configuration from 'src/config/configuration';
       }),
     }),
   ],
+  exports: [JwtModule],
 })
 export class AuthModule {}
