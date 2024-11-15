@@ -7,17 +7,20 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { MenuService } from './menu.service';
 import { CreateMenuDTO, updateMenuDTO } from './dto/menu.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { OptionalParseBoolPipe } from './pipes/OptionalParseBoolPipe';
 
 @Controller('menu')
 export class MenuController {
   constructor(private menuService: MenuService) {}
 
   @Get()
-  findAll() {
-    return this.menuService.findAll();
+  findAll(@Query('isDaysMenu', OptionalParseBoolPipe) isDaysMenu?: boolean) {
+    return this.menuService.findAll({ isDaysMenu });
   }
 
   @Get(':id')
@@ -26,6 +29,7 @@ export class MenuController {
   }
 
   @Post()
+  @UseGuards(AuthGuard)
   create(@Body() menu: CreateMenuDTO) {
     const { name, price, description, imageUrl } = menu;
 
@@ -33,11 +37,13 @@ export class MenuController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   delete(@Param('id') id: number) {
     return this.menuService.delete(id);
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard)
   update(@Param('id') id: number, @Body() updatedFields: updateMenuDTO) {
     return this.menuService.update(id, updatedFields);
   }

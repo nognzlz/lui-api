@@ -10,8 +10,11 @@ export class MenuService {
     @InjectRepository(Menu) private menuRepository: Repository<Menu>,
   ) {}
 
-  findAll(): Promise<Menu[]> {
-    return this.menuRepository.find();
+  findAll(queryParams: { isDaysMenu: boolean }): Promise<Menu[]> {
+    const { isDaysMenu } = queryParams;
+    const opts =
+      typeof isDaysMenu !== 'undefined' ? { where: { isDaysMenu } } : {};
+    return this.menuRepository.find(opts);
   }
 
   findOne(id: number): Promise<Menu> {

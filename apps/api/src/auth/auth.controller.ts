@@ -5,7 +5,6 @@ import {
   Post,
   Body,
   Get,
-  NotImplementedException,
   UseGuards,
   Request,
 } from '@nestjs/common';

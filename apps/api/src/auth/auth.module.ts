@@ -11,7 +11,6 @@ import configuration from 'src/config/configuration';
   controllers: [AuthController],
   imports: [
     UsersModule,
-    ConfigModule,
     JwtModule.registerAsync({
       imports: [ConfigModule.forRoot({ load: [configuration] })],
       inject: [ConfigService],

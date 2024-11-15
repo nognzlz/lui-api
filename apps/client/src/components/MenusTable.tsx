@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import {
   Button,
-  Flex,
   Image,
   Table,
   TableColumnsType,
@@ -70,7 +69,7 @@ const StyledTable = styled(Table<MenuType>)`
 
 export const MenusTable = ({ data, onMenuSelected }: MenusTableProps) => {
   const rowSelection: TableProps<MenuType>["rowSelection"] = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: MenuType[]) => {
+    onChange: (_, selectedRows: MenuType[]) => {
       onMenuSelected(selectedRows[0]);
     },
   };
