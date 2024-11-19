@@ -7,7 +7,9 @@ import {
   Get,
   UseGuards,
   Request,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './guards/auth.guard';
 
@@ -17,8 +19,28 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  login(@Body() input: { username: string; password: string }) {
-    return this.authService.authenticate(input);
+  async login(
+    @Body() input: { username: string; password: string },
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const authReslut = await this.authService.authenticate(input);
+    response.cookie('user_token', authReslut.accessToken, {
+      expires: new Date(Date.now() + 3600000),
+      httpOnly: true,
+      sameSite: 'strict',
+    });
+    return authReslut;
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('logout')
+  async logout(@Res({ passthrough: true }) response: Response) {
+    response.cookie('user_token', '', {
+      expires: new Date(Date.now()),
+      httpOnly: true,
+      sameSite: 'strict',
+    });
+    return { message: 'Logout successfully' };
   }
 
   @Get('me')

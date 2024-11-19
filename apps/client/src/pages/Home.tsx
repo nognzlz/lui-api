@@ -4,49 +4,66 @@ import { MenusTable } from "../components/MenusTable";
 import { Card } from "../components/Card";
 import { MenuType } from "../interfaces";
 import { Link } from "react-router-dom";
+import api from "../service/api";
 
 function Home() {
   const [menus, setMenus] = useState<MenuType[]>([]);
   const [menu, setMenu] = useState<MenuType | undefined>();
 
   const initData = async () => {
-    setMenus(await fetch("/api/menu").then((res) => res.json()));
+    setMenus(
+      await api.fetchApi({
+        url: "/api/menu",
+        method: "GET",
+      })
+    );
   };
 
   useEffect(() => {
     initData();
   }, []);
 
+  const clearPreviousMenu = async (menus: MenuType[]) => {
+    Promise.all(
+      menus.map((menu) =>
+        api.fetchApi({
+          url: `/api/menu/${menu.id}`,
+          method: "PATCH",
+          body: { isDaysMenu: false },
+        })
+      )
+    );
+  };
+
   const handleChooseMenu = async () => {
     if (menu) {
-      const response = await fetch(`/api/menu/${menu.id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ isDaysMenu: true }),
-      });
-
-      const restOfTheMenus = menus.filter((m: MenuType) => m.id !== menu.id);
-
-      const promises = restOfTheMenus.map((m: MenuType) =>
-        fetch(`/api/menu/${m.id}`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ isDaysMenu: false }),
-        })
-      );
-
-      if ((await Promise.all(promises)).every((res) => res.ok) && response.ok) {
-        notification.success({
-          message: "Menu del dia actualizado",
-          description: "El menu del dia ha sido actualizado correctamente",
+      try {
+        const prevMenus = await api.fetchApi<MenuType[]>({
+          url: `/api/menu?isDaysMenu=true`,
+          method: "GET",
         });
 
-        initData();
+        clearPreviousMenu(prevMenus);
+
+        await api.fetchApi({
+          url: `/api/menu/${menu.id}`,
+          method: "PATCH",
+          body: { isDaysMenu: true },
+        });
+
+        notification.success({
+          message: "Menu del dia",
+          description: "Menu del dia actualizado",
+        });
+      } catch (error) {
+        notification.error({
+          message: "Error",
+          description:
+            "Ocurrio un error al intentar actualizar el menu del dia",
+        });
       }
+
+      initData();
     }
   };
 

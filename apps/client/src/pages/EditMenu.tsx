@@ -6,30 +6,29 @@ import { Card } from "../components/Card";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import MenuForm from "../components/MenuForm";
+import api from "../service/api";
 
 function EditMenu() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState<MenuType>();
   const { Title } = Typography;
-  const navigate = useNavigate();
   const [form] = Form.useForm();
 
   const handleSubmit = async () => {
-    const response = await fetch(`/api/menu/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form.getFieldsValue()), // Convierte formValues a JSON
-    });
+    try {
+      await api.fetchApi<MenuType>({
+        url: `/api/menu/${id}`,
+        method: "PATCH",
+        body: form.getFieldsValue(),
+      });
 
-    if (response.ok) {
       notification.success({
         message: "Menu actualizado",
         description: "El menu ha sido actualizado correctamente",
       });
       navigate("/");
-    } else {
+    } catch (error) {
       notification.error({
         message: "Error",
         description: "Ha ocurrido un error al actualizar el menu",
@@ -48,7 +47,10 @@ function EditMenu() {
   }
 
   const initData = async () => {
-    const menu = await fetch(`/api/menu/${id}`).then((res) => res.json());
+    const menu = await api.fetchApi<MenuType>({
+      url: `/api/menu/${id}`,
+      method: "GET",
+    });
 
     if (dataIsValid(menu)) {
       setData(menu);
@@ -76,15 +78,6 @@ function EditMenu() {
     );
   }
 
-  const StyledContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    flex-direction: column;
-    min-width: 650px;
-    padding: 0 20px;
-  `;
-
   return (
     data && (
       <Card>
@@ -96,5 +89,14 @@ function EditMenu() {
     )
   );
 }
+
+const StyledContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  min-width: 650px;
+  padding: 0 20px;
+`;
 
 export default EditMenu;

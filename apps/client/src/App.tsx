@@ -1,15 +1,16 @@
-import { useMemo, createContext } from "react";
 import "./App.css";
 import Home from "./pages/Home";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import EditMenu from "./pages/EditMenu";
 import AddMenu from "./pages/AddMenu";
+import Login from "./pages/Login";
 import { Header } from "./components/Header";
 import Title from "antd/es/typography/Title";
-import { Flex, Layout, notification } from "antd";
+import { Flex, Layout } from "antd";
 import styled from "styled-components";
-
-const Context = createContext({ name: "Default" });
+import { AuthProvider } from "./contexts/auth";
+import ProtectedRoutes from "./utils/ProtectedRoutes";
+import ProtectedLogin from "./utils/ProtectedLogin";
 
 const StyledHeader = styled(Layout.Header)`
   display: flex;
@@ -26,14 +27,9 @@ const StyledContent = styled(Layout.Content)`
 `;
 
 function App() {
-  const [_, contextHolder] = notification.useNotification();
-
-  const contextValue = useMemo(() => ({ name: "Api LUI" }), []);
-
   return (
     <Router>
-      <Context.Provider value={contextValue}>
-        {contextHolder}
+      <AuthProvider>
         <Layout>
           <StyledHeader>
             <Header
@@ -50,13 +46,18 @@ function App() {
           </StyledHeader>
           <StyledContent>
             <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/add" element={<AddMenu />} />
-              <Route path="/edit/:id" element={<EditMenu />} />
+              <Route element={<ProtectedLogin />}>
+                <Route path="/login" element={<Login />} />
+              </Route>
+              <Route element={<ProtectedRoutes />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/add" element={<AddMenu />} />
+                <Route path="/edit/:id" element={<EditMenu />} />
+              </Route>
             </Routes>
           </StyledContent>
         </Layout>
-      </Context.Provider>
+      </AuthProvider>
     </Router>
   );
 }
