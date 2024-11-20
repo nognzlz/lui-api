@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {
   Button,
+  Flex,
   Image,
   Table,
   TableColumnsType,
@@ -10,6 +11,8 @@ import {
 import { Link } from "react-router-dom";
 import { MenuType } from "../interfaces";
 import { CheckOutlined, CloseOutlined, EditOutlined } from "@ant-design/icons";
+import DeleteDialog from "./DeleteDialog";
+import api from "../service/api";
 
 const StyledImage = styled(Image)`
   object-fit: cover;
@@ -19,6 +22,13 @@ interface MenusTableProps {
   data: MenuType[];
   onMenuSelected: (menu: MenuType) => void;
 }
+
+const handleDelete = async (id: number) => {
+  await api.fetchApi({
+    method: "DELETE",
+    url: `/api/menu/${id}`,
+  });
+};
 
 const columns: TableColumnsType<MenuType> = [
   {
@@ -54,11 +64,18 @@ const columns: TableColumnsType<MenuType> = [
     title: "Acciones",
     dataIndex: "id",
     render: (id: number) => (
-      <Link to={`/edit/${id}`}>
-        <Tooltip placement="top" title="Editar">
-          <Button type="primary" icon={<EditOutlined />} />
-        </Tooltip>
-      </Link>
+      <Flex gap={4}>
+        <Link to={`/edit/${id}`}>
+          <Tooltip placement="top" title="Editar">
+            <Button type="primary" icon={<EditOutlined />} />
+          </Tooltip>
+        </Link>
+        <DeleteDialog
+          onDelete={() => {
+            handleDelete(id);
+          }}
+        />
+      </Flex>
     ),
   },
 ];
