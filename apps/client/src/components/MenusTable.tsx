@@ -21,6 +21,7 @@ const StyledImage = styled(Image)`
 interface MenusTableProps {
   data: MenuType[];
   onMenuSelected: (menu: MenuType) => void;
+  refetch: () => void;
 }
 
 const handleDelete = async (id: number) => {
@@ -34,7 +35,11 @@ const StyledTable = styled(Table<MenuType>)`
   width: 100%;
 `;
 
-export const MenusTable = ({ data, onMenuSelected }: MenusTableProps) => {
+export const MenusTable = ({
+  data,
+  onMenuSelected,
+  refetch,
+}: MenusTableProps) => {
   const columns: TableColumnsType<MenuType> = [
     {
       title: "Imagen",
@@ -79,6 +84,7 @@ export const MenusTable = ({ data, onMenuSelected }: MenusTableProps) => {
             menu={data.find((menu) => menu.id === id!)!}
             onDelete={() => {
               handleDelete(id);
+              refetch();
             }}
           />
         </Flex>

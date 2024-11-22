@@ -82,7 +82,11 @@ function Home() {
             )}
           </Flex>
           <Flex>
-            <MenusTable data={menus} onMenuSelected={setMenu} />
+            <MenusTable
+              data={menus}
+              onMenuSelected={setMenu}
+              refetch={initData}
+            />
           </Flex>
         </Flex>
       </Card>

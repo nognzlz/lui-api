@@ -1,4 +1,4 @@
-import { CloseOutlined, DeleteFilled, DeleteOutlined } from "@ant-design/icons";
+import { CloseOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Button, Modal, Tooltip, Image, Flex, Typography } from "antd";
 import { MenuType } from "../interfaces";
 
