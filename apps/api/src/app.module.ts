@@ -6,6 +6,8 @@ import { MenuModule } from './menu/menu.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
@@ -13,11 +15,19 @@ import { AuthModule } from './auth/auth.module';
       rootPath: join(__dirname, '../..', 'client', 'dist'),
     }),
     MenuModule,
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'database.sqlite',
-      entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-      synchronize: true,
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule.forRoot({ load: [configuration] })],
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.get<string>('db.host'),
+        ssl: true,
+        username: config.get<string>('db.user'),
+        password: config.get<string>('db.password'),
+        database: config.get<string>('db.name'),
+        entities: [join(__dirname, '**', '*.entity.{ts,js}')],
+        synchronize: true,
+      }),
     }),
     UsersModule,
     AuthModule,
