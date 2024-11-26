@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Menu } from './menu.entity';
 import { updateMenuDTO } from './dto/menu.dto';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
@@ -12,8 +12,14 @@ export class MenuService {
 
   findAll(queryParams: { isDaysMenu: boolean }): Promise<Menu[]> {
     const { isDaysMenu } = queryParams;
-    const opts =
+    let opts: FindManyOptions<Menu> =
       typeof isDaysMenu !== 'undefined' ? { where: { isDaysMenu } } : {};
+    opts = {
+      ...opts,
+      order: {
+        name: 'ASC',
+      },
+    };
     return this.menuRepository.find(opts);
   }
 

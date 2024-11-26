@@ -41,4 +41,8 @@ export class updateMenuDTO {
   @IsBoolean()
   @IsOptional()
   isDaysMenu?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  soldOut?: boolean;
 }

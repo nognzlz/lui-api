@@ -19,4 +19,7 @@ export class Menu {
 
   @Column({ default: false })
   isDaysMenu: boolean;
+
+  @Column({ default: false })
+  soldOut: boolean;
 }

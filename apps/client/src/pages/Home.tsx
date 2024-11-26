@@ -9,6 +9,7 @@ import api from "../service/api";
 function Home() {
   const [menus, setMenus] = useState<MenuType[]>([]);
   const [menu, setMenu] = useState<MenuType | undefined>();
+  const [loading, setLoading] = useState(false);
 
   const initData = async () => {
     setMenus(
@@ -18,10 +19,6 @@ function Home() {
       })
     );
   };
-
-  useEffect(() => {
-    initData();
-  }, []);
 
   const clearPreviousMenu = async (menus: MenuType[]) => {
     Promise.all(
@@ -38,6 +35,7 @@ function Home() {
   const handleChooseMenu = async () => {
     if (menu) {
       try {
+        setLoading(true);
         const prevMenus = await api.fetchApi<MenuType[]>({
           url: `/api/menu?isDaysMenu=true`,
           method: "GET",
@@ -50,6 +48,8 @@ function Home() {
           method: "PATCH",
           body: { isDaysMenu: true },
         });
+
+        setLoading(false);
 
         notification.success({
           message: "Menu del dia",
@@ -66,6 +66,18 @@ function Home() {
       initData();
     }
   };
+
+  useEffect(() => {
+    initData();
+  }, []);
+
+  useEffect(() => {
+    if (!menus.length) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [menus]);
 
   return (
     <>
@@ -86,6 +98,7 @@ function Home() {
               data={menus}
               onMenuSelected={setMenu}
               refetch={initData}
+              loading={loading}
             />
           </Flex>
         </Flex>
