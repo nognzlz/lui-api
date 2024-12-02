@@ -1,14 +1,5 @@
 import type { FormProps } from "antd";
-import {
-  Button,
-  Card,
-  Checkbox,
-  Flex,
-  Form,
-  Input,
-  Typography,
-  Image,
-} from "antd";
+import { Button, Card, Flex, Form, Input, Typography, Image } from "antd";
 import styled from "styled-components";
 import { useAuth } from "../contexts/auth";
 
