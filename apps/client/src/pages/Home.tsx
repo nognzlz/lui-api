@@ -129,7 +129,7 @@ function Home() {
           message: "Menu del dia",
           description: "Menu del dia actualizado",
         });
-      } catch (error) {
+      } catch {
         notification.error({
           message: "Error",
           description:
